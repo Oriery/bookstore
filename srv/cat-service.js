@@ -24,7 +24,7 @@ module.exports = (srv) => {
                 )
             )
             if (affectedRows.some(row => !row)) {
-                req.error(409, 'Sold out, sorry')
+                req.error(409, 'Not enough items, sorry')
             }
         }
     })
