@@ -3,7 +3,6 @@ namespace panev.bookstore;
 using { Currency, managed, cuid } from '@sap/cds/common';
 using { panev.products.Products } from '../products';
 
-
 entity Books : Products {
     author   : Association to Authors;
 }
@@ -22,8 +21,20 @@ entity Orders : managed, cuid {
     OrderNo  : String @title:'Order Number'; //> readable key
     Items    : Composition of many OrderItems on Items.parent = $self;
 }
+
 entity OrderItems : cuid {
     parent   : Association to Orders;
     book     : Association to Books;
     amount   : Integer;
 }
+
+annotate Books with {
+    ID @(Common: {Label: 'ID'});
+    title @(Common: {Label: 'Title'});
+    stock @(Common: {Label: 'In stock'}, Measures.Unit: 'pcs');
+    price @(Common: {Label: 'Price'}, Measures.ISOCurrency: currency_code);
+};
+
+annotate Authors with {
+    name @(Common: {Label : 'Author name'})
+};

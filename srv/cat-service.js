@@ -3,11 +3,13 @@ module.exports = (srv) => {
 
     // Add some discount for overstocked books
     srv.after("READ", "Books", (books) => {
-        return books.map((book) => {
-            if (book.stock > 100) {
-                book = makeADiscountOnBook(book, 20)            
-            }
-        })
+        if (Array.isArray(books)) {
+            return books.map((book) => {
+                if (book.stock > 100) {
+                    book = makeADiscountOnBook(book, 20)            
+                }
+            })
+        }
     })
 
     // Reduce stock of books upon incoming orders

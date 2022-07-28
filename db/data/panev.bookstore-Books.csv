@@ -1,6 +1,6 @@
-ID;title;author_ID;stock;price
-201;Wuthering Heights;101;12;0.99
-207;Jane Eyre;107;11;11.99
-251;The Raven;150;333;15.49
-252;Eleonora;150;555;3.99
-271;Catweazle;170;22;1.99
+ID;title;author_ID;stock;price;currency_code
+201;Wuthering Heights;101;12;0.99;USD
+207;Jane Eyre;107;11;11.99;USD
+251;The Raven;150;333;15.49;USD
+252;Eleonora;150;555;3.99;USD
+271;Catweazle;170;22;1.99;USD

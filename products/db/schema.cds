@@ -17,3 +17,8 @@ entity Categories : CodeList {
   parent   : Association to Categories;
   children : Composition of many Categories on children.parent = $self;
 }
+
+annotate Categories with {
+    name @Common : { Label: 'Category name' };
+};
+
