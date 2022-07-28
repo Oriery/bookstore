@@ -13,7 +13,7 @@ entity Magazines : Products {
 
 entity Authors : managed {
     key ID   : Integer;
-    name     : String(64);
+    name     : localized String(63);
     books    : Association to many Books on books.author = $self;
 }
 
