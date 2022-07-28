@@ -17,6 +17,7 @@ annotate CatalogService.Books with @(
             $Type : 'UI.HeaderInfoType',
             TypeName : 'Book',
             TypeNamePlural : 'Books',
+            Title: {$Type: 'UI.DataField', Value: title}
         },
         SelectionFields : [ID, title, stock, price, author],
         LineItem : [
