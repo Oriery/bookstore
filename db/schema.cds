@@ -30,11 +30,11 @@ entity OrderItems : cuid {
 
 annotate Books with {
     ID @(Common: {Label: 'ID'});
-    title @(Common: {Label: 'Title'});
-    stock @(Common: {Label: 'In stock'}, Measures.Unit: 'pcs');
-    price @(Common: {Label: 'Price'}, Measures.ISOCurrency: currency_code);
+    title @(Common: {Label: '{i18n>PropertyTitle}'});
+    stock @(Common: {Label: '{i18n>PropertyStock}'}, Measures.Unit: '{i18n>WordPCS}');
+    price @(Common: {Label: '{i18n>PropertyPrice}'}, Measures.ISOCurrency: currency_code);
 };
 
 annotate Authors with {
-    name @(Common: {Label : 'Author name'})
+    name @(Common: {Label : '{i18n>PropertyAuthor}'})
 };

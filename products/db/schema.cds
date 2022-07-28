@@ -19,6 +19,6 @@ entity Categories : CodeList {
 }
 
 annotate Categories with {
-    name @Common : { Label: 'Category name' };
+    name @Common : { Label: '{i18n>PropertyCategoryName}' };
 };
 
