@@ -17,8 +17,8 @@ GET http://localhost:4004/admin/Books(201)
 ### Books as seen by admin
 GET http://localhost:4004/admin/Books
 
-### Books as seen by client
-GET http://localhost:4004/browse/Books
+### Check localization
+GET http://localhost:4004/browse/Books?sap-language=DE
 
 ###
 GET http://localhost:4004/admin/Orders?$expand=Items($expand=book($select=title);$select=amount)&$select=OrderNo,Items
