@@ -10,6 +10,17 @@ Content-Type: application/json
     ]
 }
 
+### Send Order to HANA
+POST https://bookstore-srv-comedic-hyrax-el.cfapps.us10.hana.ondemand.com/browse/Orders
+Content-Type: application/json
+
+{ 
+    "OrderNo":"Some number", 
+    "Items":[
+        { "book_ID":201, "amount":5 },
+        { "book_ID":207, "amount":1 }
+    ]
+}
 
 ### Check books entity that stock was reduced
 GET http://localhost:4004/admin/Books(201)
@@ -17,8 +28,8 @@ GET http://localhost:4004/admin/Books(201)
 ### Books as seen by admin
 GET http://localhost:4004/admin/Books
 
-### Books as seen by client
-GET http://localhost:4004/browse/Books
+### Check localization
+GET http://localhost:4004/browse/Books?sap-language=DE
 
 ###
 GET http://localhost:4004/admin/Orders?$expand=Items($expand=book($select=title);$select=amount)&$select=OrderNo,Items
