@@ -1,1 +1,67 @@
-{}
+{
+    "odata": {
+        "version": "v4"
+    },
+    "build": {
+        "target": "gen",
+        "tasks": [
+            {
+                "src": "db",
+                "for": "hana",
+                "options": {
+                    "model": [
+                        "db",
+                        "srv"
+                    ]
+                }
+            },
+            {
+                "src": "srv",
+                "for": "node-cf",
+                "options": {
+                    "model": [
+                        "db",
+                        "srv",
+                        "app"
+                    ]
+                }
+            },
+            {
+                "src": "app",
+                "for": "fiori",
+                "options": {
+                    "model": [
+                        "app"
+                    ]
+                }
+            }
+        ]
+    },
+    "auth": {
+        "passport": {
+            "strategy": "mock",
+            "users": {
+                "alice": {
+                    "password": "admin",
+                    "ID": "admin",
+                    "roles": [
+                        "admin",
+                        "authenticated-user"
+                    ],
+                    "xs.user.attributes": {
+                        "currency": [
+                            "USD"
+                        ]
+                    }
+                },
+                "bob": {
+                    "password": "user",
+                    "ID": "user",
+                    "roles": [
+                        "authenticated-user"
+                    ]
+                }
+            }
+        }
+    }
+}

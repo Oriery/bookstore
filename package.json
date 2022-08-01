@@ -12,13 +12,15 @@
     "@sap/cds": ">=5",
     "express": "^4",
     "npm": "^8.15.0",
-    "hdb": "^0.19.0"
+    "hdb": "^0.19.0",
+    "passport": "*"
   },
   "devDependencies": {
     "sqlite3": "^5.0.4"
   },
   "scripts": {
-    "start": "cds run"
+    "start": "cds run",
+    "tohana": "mbt build && cf deploy mta_archives/bookstore_1.0.0.mtar"
   },
   "eslintConfig": {
     "extends": "eslint:recommended",
@@ -48,11 +50,10 @@
   "cds": {
     "requires": {
       "db": {
-        "model": [
-          "db",
-          "srv"
-        ],
-        "kind": "hana-cloud"
+        "kind": "sqlite",
+        "credentials": {
+          "database": "sqlite.db"
+        }
       }
     }
   }

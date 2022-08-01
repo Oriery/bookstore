@@ -1,8 +1,11 @@
 using { panev.bookstore as my } from '../db/schema';
 
-service AdminService @(_requires:'admin') {
+service AdminService @(_requires: 'authenticated-user') {
+    @(restrict: [{grant: '*', to:'admin'}])
     entity Books as projection on my.Books;
+    @(restrict: [{grant: '*', to:'admin'}])
     entity Authors as projection on my.Authors;
+    @(restrict: [{grant: '*', to:'admin'}])
     entity Orders as select from my.Orders;
 }
 
