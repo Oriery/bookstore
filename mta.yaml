@@ -24,6 +24,7 @@ modules:
         properties:
           srv-url: ${default-url}
     requires:
+      - name: bookstore-uaa
       - name: bookstore-db
 
   - name: bookstore-db-deployer
@@ -32,6 +33,7 @@ modules:
     parameters:
       buildpack: nodejs_buildpack
     requires:
+      - name: bookstore-uaa
       - name: bookstore-db
 
 resources:
@@ -40,3 +42,12 @@ resources:
     parameters:
       service: hana
       service-plan: hdi-shared
+  - name: bookstore-uaa
+    type: org.cloudfoundry.managed-service
+    parameters:
+      path: ./xs-security.json
+      service: xsuaa
+      service-plan: application
+      config: 
+        xsappname: panev-bookstore-${space}
+        tenant-mode: dedicated
