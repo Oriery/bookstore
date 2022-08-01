@@ -1,0 +1,3 @@
+BusinessPartner;FirstName;LastName;BusinessPartnerIsBlocked
+Alice;Alice;Wonder;false
+Bob;Bob;Angel;true

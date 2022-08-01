@@ -1,4 +1,6 @@
 using { panev.bookstore as bs } from '../db/schema';
+using { API_BUSINESS_PARTNER as external } from './external/API_BUSINESS_PARTNER.csn';
+
 
 @path:'/browse'
 service CatalogService {
@@ -9,6 +11,14 @@ service CatalogService {
     @requires_: 'authenticated-user'
     @insertonly 
     entity Orders as projection on bs.Orders;
+
+    @readonly
+    entity BusinessPartners as projection on external.A_BusinessPartner {
+        key BusinessPartner as ID,
+        FirstName,
+        LastName,
+        BusinessPartnerIsBlocked
+    };
 }
 
 annotate CatalogService.Books with @(

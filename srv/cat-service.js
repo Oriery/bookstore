@@ -1,5 +1,6 @@
-module.exports = (srv) => {
-    const { Books } = cds.entities
+module.exports = async (srv) => {
+    const { Books, BusinessPartners } = cds.entities
+    const extSrv = await cds.connect.to('API_BUSINESS_PARTNER')
 
     // Add some discount for overstocked books
     srv.after("READ", "Books", (books) => {
@@ -28,6 +29,16 @@ module.exports = (srv) => {
             if (affectedRows.some(row => !row)) {
                 req.error(409, 'Not enough items, sorry')
             }
+        }
+    })
+
+    srv.after('READ', BusinessPartners, (elems) => {
+        if (Array.isArray(elems)) {
+            return elems.map((el) => {
+                if (el.BusinessPartnerIsBlocked) {
+                    el.LastName += ' IS BLOCKED'
+                }
+            })
         }
     })
 }

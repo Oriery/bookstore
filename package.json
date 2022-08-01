@@ -51,12 +51,12 @@
   },
   "cds": {
     "requires": {
-      "db": {
-        "model": ["db", "srv"],
-        "kind": "hana-cloud"
-      },
       "uaa": {
-          "kind": "xsuaa"
+        "kind": "xsuaa"
+      },
+      "API_BUSINESS_PARTNER": {
+        "kind": "odata-v2",
+        "model": "srv/external/API_BUSINESS_PARTNER"
       }
     }
   }
