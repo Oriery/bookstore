@@ -3,14 +3,12 @@ module.exports = async (srv) => {
     const extSrv = await cds.connect.to('API_BUSINESS_PARTNER')
 
     // Add some discount for overstocked books
-    srv.after("READ", "Books", (books) => {
-        if (Array.isArray(books)) {
-            return books.map((book) => {
-                if (book.stock > 100) {
-                    book = makeADiscountOnBook(book, 20)            
-                }
-            })
+    srv.after("READ", "Books", (each) => {
+        if (each.stock > 100) {
+            each = makeADiscountOnBook(each, 20)            
         }
+
+        return each
     })
 
     // Reduce stock of books upon incoming orders
@@ -32,14 +30,12 @@ module.exports = async (srv) => {
         }
     })
 
-    srv.after('READ', BusinessPartners, (elems) => {
-        if (Array.isArray(elems)) {
-            return elems.map((el) => {
-                if (el.BusinessPartnerIsBlocked) {
-                    el.LastName += ' IS BLOCKED'
-                }
-            })
+    srv.after('READ', BusinessPartners, (each) => {
+        if (each.BusinessPartnerIsBlocked) {
+            each.LastName += ' IS BLOCKED'
         }
+
+        return each
     })
 }
 
