@@ -1,3 +1,7 @@
+### Custom:
+# Temp file of building to hana
+Makefile_*.mta
+
 # CAP bookstore
 _out
 *.db

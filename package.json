@@ -22,7 +22,7 @@
   },
   "scripts": {
     "start": "cds run",
-    "tohana": "mbt build && cf deploy mta_archives/bookstore_1.0.0.mtar"
+    "tohana": "CDS_ENV=production mbt build && cf deploy mta_archives/bookstore_1.0.0.mtar"
   },
   "eslintConfig": {
     "extends": "eslint:recommended",
@@ -56,7 +56,21 @@
       },
       "API_BUSINESS_PARTNER": {
         "kind": "odata-v2",
-        "model": "srv/external/API_BUSINESS_PARTNER"
+        "model": "srv/external/API_BUSINESS_PARTNER",
+        "_comment": "// TODO. Now credentials is switched off in order to mock external service",
+        "--credentials": { 
+            "destination": "test",
+            "path": "/sap/opu/odata/sap/API_BUSINESS_PARTNER"
+        }
+      },
+      "[production]": {
+          "db": { 
+            "model": [ 
+              "db", 
+              "srv" 
+            ],
+            "kind": "hana-cloud"
+          }
       }
     }
   }

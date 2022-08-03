@@ -9,7 +9,7 @@ service CatalogService {
     } excluding { createdBy, modifiedBy, createdAt, modifiedAt };
 
     @requires_: 'authenticated-user'
-    @insertonly 
+    @insertonly
     entity Orders as projection on bs.Orders;
 
     @readonly
@@ -19,6 +19,10 @@ service CatalogService {
         LastName,
         BusinessPartnerIsBlocked
     };
+
+    event TestEvent {
+        SomeInfo: String;
+    }
 }
 
 annotate CatalogService.Books with @(
