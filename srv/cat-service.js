@@ -1,11 +1,10 @@
-module.exports = async (srv) => {
-    const { Books, Orders } = cds.entities
-    const { BusinessPartners } = srv.entities
+module.exports = cds.service.impl(async function () {
+    const { Books, Orders, BusinessPartners } = this.entities
 
     const extSrv = await cds.connect.to('API_BUSINESS_PARTNER')
 
     // Add some discount for overstocked books
-    srv.after("READ", "Books", (each) => {
+    this.after("READ", "Books", (each) => {
         if (each.stock > 100) {
             each = makeADiscountOnBook(each, 20)            
         }
@@ -14,7 +13,7 @@ module.exports = async (srv) => {
     })
 
     // Reduce stock of books upon incoming orders
-    srv.before ('CREATE','Orders', async (req)=>{
+    this.before ('CREATE','Orders', async (req)=>{
         const tx = cds.transaction(req)
         const order = req.data
 
@@ -33,11 +32,11 @@ module.exports = async (srv) => {
     })
 
     // BUG. It worked fine some times but I don't know when it stopped to
-    srv.on('READ', BusinessPartners, req => {
+    this.on('READ', BusinessPartners, req => {
         extSrv.tx(req).run(req.query)
     })
 
-    srv.after('READ', BusinessPartners, (each) => {
+    this.after('READ', BusinessPartners, (each) => {
         if (each.BusinessPartnerIsBlocked) {
             each.LastName += ' IS BLOCKED'
         }
@@ -54,18 +53,18 @@ module.exports = async (srv) => {
 
         if (!orders.length) return
 
-        // BUG This crashes with "[ERROR] Transaction is committed, no subsequent .run allowed, without prior .begin" even when transaction in lines 52-55 is commented
         const businessPartnerFull = await extSrv.run(SELECT.one('BusinessPartnerIsBlocked').from(BusinessPartners).where({ ID: businessPartner }))
+        console.log(businessPartnerFull)
 
         if (!businessPartnerFull || 
             !businessPartnerFull.BusinessPartnerIsBlocked) return
         
-        await Promise.all(orders.map(order => tx.run(UPDATE(Orders).where(order).set({status: 'blocked'}))))
+        await Promise.all(orders.map(order => cds.run(UPDATE(Orders).where(order).set({status: 'blocked'}))))
         
-        console.log('end ')
-        srv.emit('TestEvent', 'Some info about event')
+        this.emit('TestEvent', 'Some info about event')
+        console.log("TestEvent emitted")
     })
-}
+})
 
 function makeADiscountOnBook(book, sale) {
     const temp = book.price * (1 - 0.01 * sale)
