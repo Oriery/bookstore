@@ -31,7 +31,6 @@ module.exports = cds.service.impl(async function () {
         }
     })
 
-    // BUG. It worked fine some times but I don't know when it stopped to
     this.on('READ', BusinessPartners, req => {
         extSrv.tx(req).run(req.query)
     })
