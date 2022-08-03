@@ -20,6 +20,7 @@ entity Authors : managed {
 entity Orders : managed, cuid {
     OrderNo  : String @title:'Order Number'; //> readable key
     Items    : Composition of many OrderItems on Items.parent = $self;
+    status   : String;
 }
 
 entity OrderItems : cuid {

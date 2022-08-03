@@ -1,0 +1,10 @@
+PATCH http://localhost:4004/api-business-partner/A_BusinessPartner('Alice')
+Content-Type: application/json
+
+{"BusinessPartnerIsBlocked": true}
+
+###
+PATCH http://localhost:4004/api-business-partner/A_BusinessPartner('Bob')
+Content-Type: application/json
+
+{"BusinessPartnerIsBlocked": true}

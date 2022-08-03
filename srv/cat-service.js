@@ -1,5 +1,7 @@
 module.exports = async (srv) => {
-    const { Books, BusinessPartners } = cds.entities
+    const { Books, Orders } = cds.entities
+    const { BusinessPartners } = srv.entities
+
     const extSrv = await cds.connect.to('API_BUSINESS_PARTNER')
 
     // Add some discount for overstocked books
@@ -30,12 +32,38 @@ module.exports = async (srv) => {
         }
     })
 
+    // BUG. It worked fine some times but I don't know when it stopped to
+    srv.on('READ', BusinessPartners, req => {
+        extSrv.tx(req).run(req.query)
+    })
+
     srv.after('READ', BusinessPartners, (each) => {
         if (each.BusinessPartnerIsBlocked) {
             each.LastName += ' IS BLOCKED'
         }
 
         return each
+    })
+
+    extSrv.on('BusinessPartner/Changed', async msg => {
+        console.log('Event consumed "BusinessPartner/Changed": ', msg.data)
+        
+        const businessPartner = msg.data.KEY[0].BUSINESSPARTNER
+        let tx = cds.tx(msg)
+        const orders = await tx.run(SELECT('ID').from(Orders).where({createdBy: businessPartner, status: 'processing'}))
+
+        if (!orders.length) return
+
+        // BUG This crashes with "[ERROR] Transaction is committed, no subsequent .run allowed, without prior .begin" even when transaction in lines 52-55 is commented
+        const businessPartnerFull = await extSrv.run(SELECT.one('BusinessPartnerIsBlocked').from(BusinessPartners).where({ ID: businessPartner }))
+
+        if (!businessPartnerFull || 
+            !businessPartnerFull.BusinessPartnerIsBlocked) return
+        
+        await Promise.all(orders.map(order => tx.run(UPDATE(Orders).where(order).set({status: 'blocked'}))))
+        
+        console.log('end ')
+        srv.emit('TestEvent', 'Some info about event')
     })
 }
 
