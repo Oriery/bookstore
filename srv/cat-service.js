@@ -32,9 +32,15 @@ module.exports = cds.service.impl(async function () {
     })
 
     // BUG. It worked fine some times but I don't know when it stopped to
+<<<<<<< HEAD
     this.on('READ', BusinessPartners, req => {
         extSrv.tx(req).run(req.query)
     })
+=======
+    this.on('READ', BusinessPartners, req => 
+    extSrv.tx(req).run(req.query)
+    )
+>>>>>>> 9f1926ded4cb30ef9d56e26a9f0574f54d74266b
 
     this.after('READ', BusinessPartners, (each) => {
         if (each.BusinessPartnerIsBlocked) {
