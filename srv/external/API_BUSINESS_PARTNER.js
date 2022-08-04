@@ -1,9 +1,12 @@
 module.exports = srv => {
-    srv.on(['CREATE', 'UPDATE', 'DELETE'], req => {
+    const { A_BusinessPartner } = srv.entities
+
+    srv.on(['CREATE', 'UPDATE', 'DELETE'], A_BusinessPartner, req => {
         const payload = { KEY: [{BUSINESSPARTNER: req.data.BusinessPartner}]}
 
-        srv.emit('BusinessPartner/Changed', payload)
+        cds.run(req.query)
 
-        console.log('Event emitted "BusinessPartner/Changed": ', payload)
+        srv.emit('BusinessPartner/Changed', payload)
+        console.log('Event emitted "BusinessPartner/Changed": ', payload, req.event)
     })
 }

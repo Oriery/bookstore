@@ -8,3 +8,9 @@ PATCH http://localhost:4004/api-business-partner/A_BusinessPartner('Bob')
 Content-Type: application/json
 
 {"BusinessPartnerIsBlocked": true}
+
+###
+GET http://localhost:4004/api-business-partner/A_BusinessPartner
+
+###
+GET http://localhost:4004/browse/BusinessPartners
