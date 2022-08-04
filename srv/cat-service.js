@@ -31,9 +31,9 @@ module.exports = cds.service.impl(async function () {
         }
     })
 
-    this.on('READ', BusinessPartners, req => {
+    this.on('READ', BusinessPartners, req =>
         extSrv.tx(req).run(req.query)
-    })
+    )
 
     this.after('READ', BusinessPartners, (each) => {
         if (each.BusinessPartnerIsBlocked) {
