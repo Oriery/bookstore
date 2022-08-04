@@ -4,32 +4,10 @@ module.exports = cds.service.impl(async function () {
     const extSrv = await cds.connect.to('API_BUSINESS_PARTNER')
 
     // Add some discount for overstocked books
-    this.after("READ", "Books", (each) => {
-        if (each.stock > 100) {
-            each = makeADiscountOnBook(each, 20)            
-        }
-
-        return each
-    })
+    this.after('READ', 'Books', _afterReadBooks)
 
     // Reduce stock of books upon incoming orders
-    this.before ('CREATE','Orders', async (req)=>{
-        const tx = cds.transaction(req)
-        const order = req.data
-
-        if (order.Items) {
-            const affectedRows = await tx.run(order.Items.map(item =>
-                UPDATE(Books) 
-                .where({ID:item.book_ID})
-                .and(`stock >=`, item.amount)
-                .set(`stock -=`, item.amount)
-                )
-            )
-            if (affectedRows.some(row => !row)) {
-                req.error(409, 'Not enough items, sorry')
-            }
-        }
-    })
+    this.before ('CREATE','Orders', _beforeCreateOrder)
 
     this.on('READ', BusinessPartners, req =>
         extSrv.tx(req).run(req.query)
@@ -43,9 +21,30 @@ module.exports = cds.service.impl(async function () {
         return each
     })
 
-    extSrv.on('BusinessPartner/Changed', async msg => {
+    extSrv.on('BusinessPartner/Changed', _onBusinessPartnerChanged)
+
+    function _afterReadBooks(each) {
+        if (each.stock > 100) {
+            each = makeADiscountOnBook(each, 20)            
+        }
+
+        return each
+    }
+
+    function makeADiscountOnBook(book, sale) {
+        const temp = book.price * (1 - 0.01 * sale)
+        const newPrice1 = Math.round(temp * 100) / 100
+        const newPrice2 = Math.ceil(newPrice1) - 0.01 // example: 7.4 -> 7.99
+
+        book.price = newPrice2 < book.price ? newPrice2 : newPrice1
+        book.title += ' -- NOW ON SALE!!!'
+
+        return book
+    }
+
+    async function _onBusinessPartnerChanged(msg) {
         console.log('Event consumed "BusinessPartner/Changed": ', msg.data)
-        
+            
         const businessPartner = msg.data.KEY[0].BUSINESSPARTNER
         let tx = cds.tx(msg)
         const orders = await tx.run(SELECT('ID').from(Orders).where({createdBy: businessPartner, status: 'processing'}))
@@ -61,17 +60,24 @@ module.exports = cds.service.impl(async function () {
         await Promise.all(orders.map(order => cds.run(UPDATE(Orders).where(order).set({status: 'blocked'}))))
         
         this.emit('TestEvent', 'Some info about event')
-        console.log("TestEvent emitted")
-    })
+        console.log('TestEvent emitted')
+    }
+
+    async function _beforeCreateOrder(req) {
+        const tx = cds.transaction(req)
+        const order = req.data
+
+        if (order.Items) {
+            const affectedRows = await tx.run(order.Items.map(item =>
+                UPDATE(Books) 
+                    .where({ID:item.book_ID})
+                    .and('stock >=', item.amount)
+                    .set('stock -=', item.amount)
+            )
+            )
+            if (affectedRows.some(row => !row)) {
+                req.error(409, 'Not enough items, sorry')
+            }
+        }
+    }
 })
-
-function makeADiscountOnBook(book, sale) {
-    const temp = book.price * (1 - 0.01 * sale)
-    const newPrice1 = Math.round(temp * 100) / 100
-    const newPrice2 = Math.ceil(newPrice1) - 0.01 // example: 7.4 -> 7.99
-
-    book.price = newPrice2 < book.price ? newPrice2 : newPrice1
-    book.title += " -- NOW ON SALE!!!"
-
-    return book
-}

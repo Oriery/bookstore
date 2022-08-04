@@ -18,11 +18,13 @@
     "passport": "latest"
   },
   "devDependencies": {
+    "eslint": "^8.21.0",
     "sqlite3": "^5.0.4"
   },
   "scripts": {
     "start": "cds run",
-    "tohana": "npm install -g npm@8.15.1 && CDS_ENV=production mbt build && cf deploy mta_archives/bookstore_1.0.0.mtar"
+    "tohana": "npm install -g npm@8.15.1 && CDS_ENV=production mbt build && cf deploy mta_archives/bookstore_1.0.0.mtar",
+    "lint": "npx eslint srv/ --fix"
   },
   "eslintConfig": {
     "extends": "eslint:recommended",
