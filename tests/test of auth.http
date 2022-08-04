@@ -1,0 +1,16 @@
+### Check Orders
+GET https://admin:admin@378b7234trial-dev-bookstore-srv.cfapps.us10.hana.ondemand.com/admin/Orders
+
+### Submit Order
+POST https://user:user@378b7234trial-dev-bookstore-srv.cfapps.us10.hana.ondemand.com/browse/Orders
+Content-Type: application/json
+
+{ 
+    "OrderNo":"Some number", 
+    "Items":[
+        { "book_ID":201, "amount":1 },
+        { "book_ID":207, "amount":1 }
+    ],
+    "createdBy": "Bob",
+    "status": "processing"
+}

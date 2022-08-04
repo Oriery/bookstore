@@ -14,8 +14,9 @@
     "@sap/xssec": "latest",
     "express": "^4",
     "hdb": "latest",
-    "npm": "^8.15.1",
-    "passport": "latest"
+    "npm": "latest",
+    "passport": "latest",
+    "@sap-cloud-sdk/http-client": "latest"
   },
   "devDependencies": {
     "eslint": "^8.21.0",
@@ -23,7 +24,7 @@
   },
   "scripts": {
     "start": "cds run",
-    "tohana": "npm install -g npm@8.15.1 && CDS_ENV=production mbt build && cf deploy mta_archives/bookstore_1.0.0.mtar",
+    "tohana": "npm install -g npm@8.16.0 && CDS_ENV=production mbt build && cf deploy mta_archives/bookstore_1.0.0.mtar -f --retries 1",
     "lint": "npx eslint srv/ --fix"
   },
   "eslintConfig": {
@@ -59,8 +60,10 @@
       "API_BUSINESS_PARTNER": {
         "kind": "odata-v2",
         "model": "srv/external/API_BUSINESS_PARTNER",
-        "[production].credentials": {
-          "destination": "test"
+        "[production]": {
+            "credentials": {
+                "destination": "TestBusinessPartners"
+            }
         }
       },
       "[production]": {

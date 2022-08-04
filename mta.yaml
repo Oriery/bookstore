@@ -26,6 +26,7 @@ modules:
     requires:
       - name: bookstore-uaa
       - name: bookstore-db
+      - name: business-partners-destination
 
   - name: bookstore-db-deployer
     type: hdb
@@ -35,8 +36,13 @@ modules:
     requires:
       - name: bookstore-uaa
       - name: bookstore-db
+      - name: business-partners-destination
 
 resources:
+  - name: business-partners-destination
+    type: org.cloudfoundry.existing-service
+    parameters:
+      service-name: business-partners-destination
   - name: bookstore-db
     type: com.sap.xs.hdi-container
     parameters:
